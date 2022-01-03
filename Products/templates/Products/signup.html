@@ -1,0 +1,39 @@
+{% extends 'Products/Main.html' %}
+{% load static %}
+{% block title %}sign up{% endblock title %}
+{% block content %}
+<div class="container">
+ <div class="row my-3 ">
+  <div class="col-sm-6 offset-sm-3 ">
+      <h2 class="text-center">Sign up</h2>
+   <hr>
+      <form action="" method="post" novalidate >
+       {% csrf_token %}
+    <div class="shadow p-5">
+        {% for fm in form %}
+        <div class="form-group mb-3">
+        {{fm.label_tag}} {{fm}}<small class="text-danger">{{fm.errors|striptags}}</small><br>
+        {% endfor %}
+        </div>
+        <div class="wthree-text">
+						<label class="anim">
+							<input type="checkbox" class="checkbox" required="">
+							<span>I Agree To The Terms & Conditions</span>
+						</label>
+						<div class="clear"> </div>
+					</div><br>
+     <input type="submit" value="Signup" class="btn btn-primary">
+        <br>
+    </div>
+    <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}"
+       class="text-danger">Login Now</a></small></div>
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="alert alert-danger my-3">{{error}}</p>
+    {% endfor %}
+    {% endif %}
+   </form>
+  </div>
+ </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,84 @@
+{% extends 'Products/Main.html' %}
+{% load static %}
+{% block title %}Profile Details{% endblock title %}
+
+{% block content %}
+{% if messages %}
+       {% for message in messages %}
+<div {% if message.tags %}  class="container col-sm-8  text-center alert alert-{{message.tags}} alert-dismissible fade show" role="alert" {% endif %}>
+  {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+ {% endfor %}
+{% endif %}
+<div class="container rounded bg-white mb-5 mt-3">
+    <div class="row">
+
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                {% if user.profile.image  %}
+                <img class="rounded-circle" width="200" src="{{user.profile.imageURL}}">
+                {% else %}
+                <img class="rounded-circle" width="200" src="{% static 'images/profile.png'%}">
+                {% endif %}
+                <span class="font-weight-bold">{{name}}</span><span class="text-black-50">{{user.email}}</span><span> </span></div>
+        </div>
+
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile Settings</h4>
+                </div>
+                <div class="row mt-2 shadow p-5">
+                    <div class="col-md-6">
+                        <form action="" method="post" novalidate enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if u_form.non_field_errors %}
+                            {% for error in u_form.non_field_errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                            {% endif %}
+                            {% for fm in u_form %}
+                            {{fm.label_tag}} {{fm}}<small class="text-danger"> {{fm.errors|striptags}}</small> <br>
+                            {% endfor %}
+
+                            {% if p_form.non_field_errors %}
+                            {% for error in p_form.non_field_errors %}
+                            <p class="alert alert-danger my-3">{{ error }}</p>
+                            {% endfor %}
+                            {% endif %}
+                            {% for fm in p_form %}
+                            {{fm.label_tag}} {{fm}}<small class="text-danger"> {{fm.errors|striptags}}</small><br>
+                            {% endfor %}
+                            <div class="mt-5 text-center"><input type="submit" value="Save" class="btn btn-primary"></div>
+                        </form>
+
+                        <div class="mt-5">
+                        <a href="{% url 'password_change' %}">Change Password</a><br><br>
+                        <a href="{% url 'logout' %}">Logout</a><br><br>
+                               {% if request.user.id == user.id %}
+                <form action="{% url 'deleteuserprofile' user.id %}" method="post" class="d-inline mt-5">
+                    {% csrf_token %}
+                   <span class="text-primary">Are u sure to delete your Account?</span> <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                </form>
+               {% endif %}
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+        {% if myproducts %}
+         <div class="col-md-2">
+            <h5 class="mt-5">My Ads</h5>
+             {% for p in myproducts %}
+               <a href="{% url 'product_detail' p.id %}">{{p.name}}</a><br>
+             {% endfor %}
+         </div>
+           {% endif %}
+    </div>
+</div>
+
+
+{% endblock content %}

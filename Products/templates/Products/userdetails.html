@@ -1,0 +1,54 @@
+{% extends 'Products/Main.html' %}
+{% load static %}
+{% block title %}user Details{% endblock title %}
+{% block content %}
+
+<div class="container rounded bg-white mb-5">
+    <div class="row">
+
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                {% if user.profile.image  %}
+                <img class="rounded-circle mt-5" width="200" src="{{user.profile.imageURL}}">
+                {% else %}
+                <img class="rounded-circle mt-5" width="200" src="{% static 'images/profile.png'%}">
+                {% endif %}
+                <span class="font-weight-bold">{{user}}</span><span class="text-black-50">{{user.email}}</span>
+                {% if request.user.is_staff %}
+                <form action="{% url 'deleteuserprofile' user.id %}" method="post" class="d-inline mt-5">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger btn-md" value="Delete">
+                </form>
+               {% endif %}
+
+
+            </div>
+        </div>
+
+     <div class="col-md-5 border-right mt-5">
+       <b class="ml-5">Details:</b>
+             <ul class="list-group list-group-flush">
+                 <li class="list-group-item">Name:   <span class="pl-5">{{user}}</span> </li>
+                <li class="list-group-item">Email:   <span class="pl-5">{{user.email}}</span> </li>
+              <li class="list-group-item">City:    <span class="pl-5">{{user.profile.city}}</span></li>
+              <li class="list-group-item">Phone Number: <span class="pl-5">{{user.profile.phone_number}}</span></li>
+             <li class="list-group-item">Bio:   <span class="pl-5">{{user.profile.bio}}</span> </li>
+             </ul>
+
+
+
+     </div>
+          <div class="col-md-4 border-right mt-5">
+                   {% if products %}
+              <b class="ml-5">Published Ads:</b><br><br>
+              {% for product in products %}
+              <a class="ml-5" href="{% url 'product_detail' product.id %}">{{product.name}}</a><br>
+              {% endfor %}
+              {% endif %}
+          </div>
+    </div>
+</div>
+
+{% endblock content%}
+{% if perms.Products.delete_product or request.user == product.owner %}
+ {% endif %}

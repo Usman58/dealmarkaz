@@ -1,0 +1,67 @@
+{% extends 'Products/Main.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<div class="container text-center mb-3">
+    <a href="{% url 'createproduct' %}" class="btn btn-light btn-md active" role="button" aria-pressed="true">
+        <img class="rounded-circle" width="30" src="{% static 'images/plus.jpg'%}">Post Ad
+    </a>
+</div>
+
+<div class="mb-4">
+    Browse Catogories<br>
+        {% for category in categorylist %}
+        <a href="{% url 'product_list_category' category.slug %}"><img src="{{category.imageURL}}" width="50">{{category.category_name}}({{category.total_products}})</a>,
+        {% endfor %}
+
+</div>
+<hr>
+
+
+<div class="row">
+
+     {% for product in productlist %}
+
+  <div class="col-sm-4 mb-3">
+
+      <div class="card" style="width: 18rem;">
+           <a href="{% url 'product_detail' product.id %}" class="text-dark" style="text-decoration:none;">
+        <img class="card-img-top shadow p-3 mb-3 bg-white rounded" src="{{product.imageURL}}" alt="{{product.name}}">
+           </a>
+          <div class="card-body">
+             <b>RS {{product.price}}</b><br><br>
+              {{product.name}}
+          </div>
+      </div>
+
+  </div>
+    {% endfor %}
+</div>
+
+{% if productlist.has_other_pages %}
+<nav aria-label="...">
+  <ul class="pagination pagination-lg">
+      {% if productlist.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{productlist.previous_page_number}}" tabindex="-1">Previous</a>
+    </li>
+      {% endif %}
+      {% for i in productlist.paginator.page_range %}
+        {% if productlist.number == i %}
+    <li class="page-item active">
+      <a class="page-link" href="#">{{ i }}</a>
+    </li>
+      {% else %}
+    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+      {% endif%}
+      {% endfor %}
+      {% if productlist.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{productlist.next_page_number}}">Next</a>
+    </li>
+      {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock content %}

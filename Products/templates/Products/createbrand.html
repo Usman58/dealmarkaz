@@ -1,0 +1,32 @@
+{% extends 'Products/Main.html' %}
+{% load static %}
+{% block title %}create product{% endblock title %}
+{% block content %}
+<div class="container">
+    <a class="btn btn btn-dark" href="/products/createproduct" role="button">Back</a>
+ <div class="row my-3">
+  <div class="col-sm-6 offset-sm-3">
+   <h3>Create Brand</h3>
+   <hr>
+   <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="shadow p-5">
+        {% for fm in form %}
+        <div class="form-group mb-3">
+        {{fm.label_tag}} {{fm}}<small class="text-danger">{{fm.errors|striptags}}</small>
+        </div>
+        {% endfor %}
+        <button type='submit' class="btn btn-primary m-3">Add</button>
+      {% if form.non_field_errors %}
+       {% for error in form.non_field_errors %}
+         <p class="alert alert-danger my-3">{{error}}</p>
+        {% endfor %}
+      {% endif %}
+
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+
+{% endblock content %}
